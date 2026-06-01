@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AdminScreen(viewModel: AppViewModel) {
-    val users by viewModel.getAllUsers().collectAsState(initial = emptyList())
+    val users by viewModel.getAllUsers().collectAsState(initial = emptyList<com.example.data.local.User>())
     var url by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -28,7 +28,7 @@ fun AdminScreen(viewModel: AppViewModel) {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        val config = viewModel.getIptvConfig()?.firstOrNull()
+        val config = viewModel.getIptvConfig().firstOrNull()
         if (config != null) {
             url = config.serverUrl
             username = config.username

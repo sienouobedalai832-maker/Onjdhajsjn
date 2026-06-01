@@ -22,18 +22,31 @@ import com.example.data.remote.MovieDetail
 import com.example.ui.theme.NeonRed
 import com.example.ui.viewmodels.AppViewModel
 
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import com.example.data.remote.CastMember
+import com.example.data.remote.MediaItem
+import com.example.ui.screens.MediaCard
+import com.example.ui.theme.SurfaceDark
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     id: Int,
     viewModel: AppViewModel,
     onBack: () -> Unit,
-    onPlay: (url: String, title: String) -> Unit
+    onPlay: (url: String, title: String) -> Unit,
+    onMovieClick: (Int) -> Unit = {}
 ) {
     var movie by remember { mutableStateOf<MovieDetail?>(null) }
+    var cast by remember { mutableStateOf<List<CastMember>>(emptyList()) }
+    var similar by remember { mutableStateOf<List<MediaItem>>(emptyList()) }
 
     LaunchedEffect(id) {
         movie = viewModel.getMovieDetail(id)
+        cast = viewModel.getCredits(id)
+        similar = viewModel.getSimilar(id)
         movie?.let {
             viewModel.saveHistory(id, it.title, "https://image.tmdb.org/t/p/w500${it.posterPath}")
         }
@@ -62,7 +75,7 @@ fun DetailsScreen(
                 title = { Text("") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Retour", tint = Color.White)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -138,7 +151,55 @@ fun DetailsScreen(
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            // Add actors logic and similar movies later if needed
+            if (cast.isNotEmpty()) {
+                Text(
+                    text = "Acteurs",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(cast.take(10)) { actor ->
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(100.dp)) {
+                            AsyncImage(
+                                model = if (actor.profilePath != null) "https://image.tmdb.org/t/p/w200${actor.profilePath}" else "",
+                                contentDescription = actor.name,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(100.dp).background(Color.DarkGray, RoundedCornerShape(8.dp))
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(text = actor.name, color = Color.White, fontSize = 12.sp, maxLines = 1, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                            Text(text = actor.character, color = Color.Gray, fontSize = 10.sp, maxLines = 1, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+            
+            if (similar.isNotEmpty()) {
+                Text(
+                    text = "Films Similaires",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(similar.take(10)) { similarMovie ->
+                        MediaCard(item = similarMovie, onClick = onMovieClick)
+                    }
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+            }
         }
     }
 }

@@ -73,7 +73,7 @@ fun LiveTvScreen(
                 items(streams.take(60)) { stream -> // taking 60 for performance, can add search later
                     StreamCard(stream) {
                         scope.launch {
-                            val config = viewModel.getIptvConfig()?.firstOrNull()
+                            val config = viewModel.getIptvConfig().firstOrNull()
                             if (config != null) {
                                 val url = "${config.serverUrl}/live/${config.username}/${config.password}/${stream.streamId}.m3u8"
                                 onPlayContent(java.net.URLEncoder.encode(url, "UTF-8"), stream.name)

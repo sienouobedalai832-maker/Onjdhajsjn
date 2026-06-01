@@ -60,6 +60,19 @@ class AppViewModel(private val repository: CineBoxRepository) : ViewModel() {
     private val _popularMovies = MutableStateFlow<List<MediaItem>>(emptyList())
     val popularMovies = _popularMovies.asStateFlow()
     
+    private val _genreMovies = MutableStateFlow<List<MediaItem>>(emptyList())
+    val genreMovies = _genreMovies.asStateFlow()
+    
+    fun loadMoviesByGenre(genreId: Int) {
+        viewModelScope.launch {
+            try {
+                _genreMovies.value = repository.getMoviesByGenre(genreId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    
     init {
         viewModelScope.launch {
             repository.initializeIptvConfig()
@@ -115,6 +128,12 @@ class AppViewModel(private val repository: CineBoxRepository) : ViewModel() {
             )
         }
     }
+    
+    fun getAllUsers() = repository.getAllUsers()
+    
+    fun getIptvConfig() = repository.getIptvConfig()
+    
+    suspend fun insertIptvConfig(config: IPTVConfig) = repository.insertIptvConfig(config)
     
     // We will just expose the repository functions for direct one-time calls in Compose where necessary, 
     // or build smaller ViewModels for specific screens if needed to avoid bloating this one.

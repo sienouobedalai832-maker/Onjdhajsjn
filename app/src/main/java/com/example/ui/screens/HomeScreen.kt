@@ -78,7 +78,13 @@ fun HomeScreen(
             genres.forEach { genre ->
                 val isActive = genre == activeGenre
                 AssistChip(
-                    onClick = { activeGenre = genre },
+                    onClick = { 
+                        activeGenre = genre
+                        val genreMap = mapOf("Action" to 28, "Drame" to 18, "Horreur" to 27, "Comédie" to 35, "Anime" to 16, "Science-Fiction" to 878, "Animation" to 16, "Thriller" to 53, "Aventure" to 12)
+                        if (genre != "Tout" && genreMap.containsKey(genre)) {
+                            viewModel.loadMoviesByGenre(genreMap[genre]!!)
+                        }
+                    },
                     label = { Text(genre, color = if (isActive) Color.White else Color.Gray) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = if (isActive) NeonRed else SurfaceDark
@@ -91,15 +97,19 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        val genreMovies by viewModel.genreMovies.collectAsState()
+
         // Film Grids
-        if (trending.isNotEmpty()) {
-            MediaSection("Tendances", trending, onMovieClick)
-        }
-        
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        if (popular.isNotEmpty()) {
-            MediaSection("Films Populaires", popular, onMovieClick)
+        if (activeGenre != "Tout" && genreMovies.isNotEmpty()) {
+            MediaSection(activeGenre, genreMovies, onMovieClick)
+        } else if (activeGenre == "Tout") {
+            if (trending.isNotEmpty()) {
+                MediaSection("Tendances", trending, onMovieClick)
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            if (popular.isNotEmpty()) {
+                MediaSection("Films Populaires", popular, onMovieClick)
+            }
         }
 
         Spacer(modifier = Modifier.height(100.dp)) // padding for bottom nav

@@ -29,16 +29,5 @@ private val DarkColorScheme = darkColorScheme(
 fun CineBoxTheme(
     content: @Composable () -> Unit,
 ) {
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = Color.Transparent.toArgb()
-            window.navigationBarColor = Color.Transparent.toArgb()
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
-        }
-    }
-
     MaterialTheme(colorScheme = DarkColorScheme, typography = Typography, content = content)
 }

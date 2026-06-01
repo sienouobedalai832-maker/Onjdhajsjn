@@ -60,7 +60,7 @@ fun AuthScreen(viewModel: AppViewModel, onLoggedIn: () -> Unit) {
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("Nom d'utilisateur") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = NeonRed,
                         unfocusedBorderColor = Color.Gray,
                         focusedLabelColor = NeonRed
@@ -72,7 +72,7 @@ fun AuthScreen(viewModel: AppViewModel, onLoggedIn: () -> Unit) {
                     value = email,
                     onValueChange = { email = it },
                     label = { Text("Email") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = NeonRed,
                         unfocusedBorderColor = Color.Gray,
                         focusedLabelColor = NeonRed
@@ -85,7 +85,7 @@ fun AuthScreen(viewModel: AppViewModel, onLoggedIn: () -> Unit) {
                     onValueChange = { password = it },
                     label = { Text("Mot de passe") },
                     visualTransformation = PasswordVisualTransformation(),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = NeonRed,
                         unfocusedBorderColor = Color.Gray,
                         focusedLabelColor = NeonRed
