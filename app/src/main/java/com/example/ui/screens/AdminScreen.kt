@@ -17,13 +17,16 @@ import com.example.ui.viewmodels.AppViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
 @Composable
 fun AdminScreen(viewModel: AppViewModel) {
     val users by viewModel.getAllUsers().collectAsState(initial = emptyList<com.example.data.local.User>())
     var url by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var backup by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
 
@@ -33,7 +36,6 @@ fun AdminScreen(viewModel: AppViewModel) {
             url = config.serverUrl
             username = config.username
             password = config.password
-            backup = config.backupUrl
         }
     }
 
@@ -46,17 +48,17 @@ fun AdminScreen(viewModel: AppViewModel) {
         Text("Administration IPTV", color = NeonRed, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text("URL Serveur") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text("URL Serveur (http://...)") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = username, onValueChange = { username = it }, label = { Text("Username") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Password") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = backup, onValueChange = { backup = it }, label = { Text("URL Secours") }, modifier = Modifier.fillMaxWidth())
         
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 scope.launch {
-                    viewModel.insertIptvConfig(IPTVConfig(1, url, username, password, backupUrl = backup))
+                    viewModel.insertIptvConfig(IPTVConfig(1, url.trim(), username.trim(), password.trim(), backupUrl = ""))
                     viewModel.loadXtreamConfigAndAuth()
+                    Toast.makeText(context, "Configuration sauvegardée !", Toast.LENGTH_SHORT).show()
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = NeonRed)

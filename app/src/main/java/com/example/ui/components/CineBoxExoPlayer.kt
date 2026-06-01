@@ -25,10 +25,7 @@ fun CineBoxExoPlayer(url: String) {
     val context = LocalContext.current
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
-            val dataSourceFactory = DefaultHttpDataSource.Factory()
-            val mediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
-            setMediaSource(mediaSource)
+            setMediaItem(MediaItem.fromUri(Uri.parse(url)))
             prepare()
             playWhenReady = true
         }

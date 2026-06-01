@@ -86,22 +86,22 @@ data class CastMember(
 
 interface TmdbApi {
     @GET("trending/all/day")
-    suspend fun getTrending(@Query("language") language: String = "fr-FR", @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
+    suspend fun getTrending(@Query("language") language: String = "fr-FR", @Query("page") page: Int = 1, @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
 
     @GET("movie/popular")
-    suspend fun getPopularMovies(@Query("language") language: String = "fr-FR", @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
+    suspend fun getPopularMovies(@Query("language") language: String = "fr-FR", @Query("page") page: Int = 1, @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
 
     @GET("movie/now_playing")
-    suspend fun getNewReleases(@Query("language") language: String = "fr-FR", @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
+    suspend fun getNewReleases(@Query("language") language: String = "fr-FR", @Query("page") page: Int = 1, @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
 
     @GET("tv/popular")
-    suspend fun getPopularSeries(@Query("language") language: String = "fr-FR", @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
+    suspend fun getPopularSeries(@Query("language") language: String = "fr-FR", @Query("page") page: Int = 1, @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
     
     @GET("discover/movie")
-    suspend fun getMoviesByGenre(@Query("with_genres") genreId: Int, @Query("language") language: String = "fr-FR", @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
+    suspend fun getMoviesByGenre(@Query("with_genres") genreId: Int, @Query("language") language: String = "fr-FR", @Query("page") page: Int = 1, @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
 
     @GET("search/multi")
-    suspend fun searchMulti(@Query("query") query: String, @Query("language") language: String = "fr-FR", @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
+    suspend fun searchMulti(@Query("query") query: String, @Query("language") language: String = "fr-FR", @Query("page") page: Int = 1, @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MediaResponse
     
     @GET("movie/{id}")
     suspend fun getMovieDetail(@Path("id") id: Int, @Query("language") language: String = "fr-FR", @Query("api_key") apiKey: String = "f71f7959dd2e0eae173514b0c99af2e6"): MovieDetail

@@ -1,6 +1,7 @@
 package com.example.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -102,33 +103,48 @@ fun DetailsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
             
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Button(
-                    onClick = {
-                        val url = "https://frembed.bond/api/film.php?id=${m.id}"
-                        onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = NeonRed),
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("VF", fontWeight = FontWeight.Bold)
-                }
+            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(text = "Lecteurs Vidéo", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 16.sp)
                 
-                Button(
-                    onClick = {
-                        val url = "https://autoembed.cc/embed/movie/${m.id}"
-                        onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("VO", fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                    Button(
+                        onClick = {
+                            val url = "https://vidsrc.net/embed/movie?tmdb=${m.id}"
+                            onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = NeonRed),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Vidsrc (EN/FR)", fontWeight = FontWeight.Bold)
+                    }
+                    
+                    Button(
+                        onClick = {
+                            val url = "https://frembed.pro/api/film.php?id=${m.id}"
+                            onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = NeonRed),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Frembed (FR)", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        onClick = {
+                            val url = "https://superembed.stream/movie?tmdb=${m.id}"
+                            onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("SuperEmbed (EN/FR)", fontWeight = FontWeight.Bold)
+                    }
                 }
             }
 

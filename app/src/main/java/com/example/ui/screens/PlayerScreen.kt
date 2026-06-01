@@ -37,7 +37,7 @@ fun PlayerScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-        if (url.contains(".m3u8")) {
+        if (url.contains(".m3u8") || url.contains(".ts")) {
             CineBoxExoPlayer(url = url)
         } else {
             CineBoxWebView(url = url, onBackRequired = onBack)

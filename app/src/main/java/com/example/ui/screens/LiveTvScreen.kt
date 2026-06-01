@@ -42,18 +42,50 @@ fun LiveTvScreen(
         }
     }
 
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredStreams = remember(searchQuery, streams) {
+        if (searchQuery.isEmpty()) {
+            streams.take(60)
+        } else {
+            streams.filter { it.name.contains(searchQuery, ignoreCase = true) }.take(60)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             .padding(16.dp)
     ) {
-        Text(
-            text = "TV Direct",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "TV Direct",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                placeholder = { Text("Chercher une chaîne...", color = Color.Gray, fontSize = 12.sp) },
+                singleLine = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 16.dp)
+                    .height(50.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = NeonRed,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         if (authStatus == null) {
@@ -70,7 +102,7 @@ fun LiveTvScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(streams.take(60)) { stream -> // taking 60 for performance, can add search later
+                items(filteredStreams) { stream -> 
                     StreamCard(stream) {
                         scope.launch {
                             val config = viewModel.getIptvConfig().firstOrNull()

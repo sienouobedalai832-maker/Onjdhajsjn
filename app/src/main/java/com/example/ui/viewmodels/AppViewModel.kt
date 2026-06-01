@@ -63,6 +63,24 @@ class AppViewModel(private val repository: CineBoxRepository) : ViewModel() {
     private val _genreMovies = MutableStateFlow<List<MediaItem>>(emptyList())
     val genreMovies = _genreMovies.asStateFlow()
     
+    private val _searchResults = MutableStateFlow<List<MediaItem>>(emptyList())
+    val searchResults = _searchResults.asStateFlow()
+
+    fun searchMovies(query: String) {
+        if (query.isEmpty()) {
+            _searchResults.value = emptyList()
+            return
+        }
+        viewModelScope.launch {
+            try {
+                _searchResults.value = repository.search(query)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _searchResults.value = emptyList()
+            }
+        }
+    }
+
     fun loadMoviesByGenre(genreId: Int) {
         viewModelScope.launch {
             try {

@@ -41,17 +41,25 @@ fun CineBoxWebView(
         modifier = Modifier.fillMaxSize(),
         factory = { context ->
             WebView(context).apply {
+                layoutParams = android.view.ViewGroup.LayoutParams(
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT
+                )
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 settings.mediaPlaybackRequiresUserGesture = false
                 settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                 settings.useWideViewPort = true
                 settings.loadWithOverviewMode = true
+                settings.setSupportMultipleWindows(false)
                 
                 webChromeClient = WebChromeClient()
                 webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                        // Allow all redirects to open in the same WebView so ads work but we can go back
+                        val requestUrl = request?.url?.toString() ?: ""
+                        if (!requestUrl.startsWith("http")) {
+                            return true // block intents like intent://
+                        }
                         return false 
                     }
                     
@@ -59,8 +67,6 @@ fun CineBoxWebView(
                         view: WebView?,
                         request: WebResourceRequest?
                     ): WebResourceResponse? {
-                        // "Ne jamais bloquer les publicités des sources"
-                        // Therefore we return null unconditionally to allow all requests
                         return super.shouldInterceptRequest(view, request)
                     }
                 }
@@ -69,9 +75,9 @@ fun CineBoxWebView(
             }
         },
         update = {
-            if (it.url != url) {
-                it.loadUrl(url)
-            }
+            // We don't need to reload the url on every recomposition.
+            // If the user watches a video and an ad redirects them, we want them to stay there,
+            // so they can press 'back' to return.
         }
     )
 

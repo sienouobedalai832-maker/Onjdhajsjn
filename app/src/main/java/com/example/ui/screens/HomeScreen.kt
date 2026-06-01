@@ -46,14 +46,35 @@ fun HomeScreen(
             .background(Color.Black)
             .verticalScroll(scrollState)
     ) {
-        // ACCES GRATUIT BADGE
+        var searchQuery by remember { mutableStateOf("") }
+        val searchResults by viewModel.searchResults.collectAsState()
+
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { 
+                    searchQuery = it
+                    viewModel.searchMovies(it)
+                },
+                placeholder = { Text("Rechercher un film...", color = Color.Gray) },
+                modifier = Modifier.weight(1f).padding(end = 8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = NeonRed,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
+                ),
+                singleLine = true,
+                shape = RoundedCornerShape(16.dp)
+            )
+            
             Badge(containerColor = Color.Green) {
                 Text(
-                    "ACCÈS GRATUIT",
+                    "GRATUIT",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -61,8 +82,8 @@ fun HomeScreen(
             }
         }
 
-        // Animated Banner (Parallax fake)
-        if (trending.isNotEmpty()) {
+        // Animated Banner (Parallax fake) - Hide when searching
+        if (searchQuery.isEmpty() && trending.isNotEmpty()) {
             BannerParallax(trending.take(5), onMovieClick)
         }
 
@@ -100,7 +121,17 @@ fun HomeScreen(
         val genreMovies by viewModel.genreMovies.collectAsState()
 
         // Film Grids
-        if (activeGenre != "Tout" && genreMovies.isNotEmpty()) {
+        if (searchQuery.isNotEmpty()) {
+            if (searchResults.isNotEmpty()) {
+                MediaSection("Résultats pour '$searchQuery'", searchResults, onMovieClick)
+            } else {
+                Text(
+                    text = "Aucun résultat trouvé.",
+                    color = Color.Gray,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        } else if (activeGenre != "Tout" && genreMovies.isNotEmpty()) {
             MediaSection(activeGenre, genreMovies, onMovieClick)
         } else if (activeGenre == "Tout") {
             if (trending.isNotEmpty()) {
