@@ -14,24 +14,34 @@ import com.example.ui.theme.SurfaceDark
 import com.example.ui.viewmodels.AppViewModel
 
 @Composable
-fun AppNavigation(viewModel: AppViewModel, navController: NavHostController = rememberNavController()) {
+fun AppNavigation(
+    viewModel: AppViewModel, 
+    navController: NavHostController = rememberNavController(),
+    onLoginSuccess: (String) -> Unit = {},
+    onLogout: () -> Unit = {}
+) {
     NavHost(navController = navController, startDestination = Routes.WELCOME) {
         composable(Routes.WELCOME) {
-            WelcomeScreen(viewModel = viewModel, onSkip = {
+            WelcomeScreen(viewModel = viewModel, onAuthRequest = {
                 navController.navigate(Routes.AUTH) {
+                    popUpTo(Routes.WELCOME) { inclusive = true }
+                }
+            }, onAutoLoggedIn = {
+                navController.navigate(Routes.MAIN) {
                     popUpTo(Routes.WELCOME) { inclusive = true }
                 }
             })
         }
         composable(Routes.AUTH) {
-            AuthScreen(viewModel = viewModel, onLoggedIn = {
+            AuthScreen(viewModel = viewModel, onLoggedIn = { email ->
+                onLoginSuccess(email)
                 navController.navigate(Routes.MAIN) {
                     popUpTo(Routes.AUTH) { inclusive = true }
                 }
             })
         }
         composable(Routes.MAIN) {
-            MainScreen(viewModel = viewModel, rootNavController = navController)
+            MainScreen(viewModel = viewModel, rootNavController = navController, onLogout = onLogout)
         }
         composable(Routes.MOVIE_DETAIL) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: return@composable
@@ -58,7 +68,7 @@ fun AppNavigation(viewModel: AppViewModel, navController: NavHostController = re
 }
 
 @Composable
-fun MainScreen(viewModel: AppViewModel, rootNavController: NavHostController) {
+fun MainScreen(viewModel: AppViewModel, rootNavController: NavHostController, onLogout: () -> Unit = {}) {
     val bottomNavController = rememberNavController()
     val user by viewModel.currentUser.collectAsState()
     val isAdmin = user?.email == "sienouobedalai832@gmail.com" || user?.email == "sienouobedalai3@gmail.com"
@@ -119,6 +129,7 @@ fun MainScreen(viewModel: AppViewModel, rootNavController: NavHostController) {
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(viewModel = viewModel, onLogout = {
+                    onLogout()
                     rootNavController.navigate(Routes.AUTH) {
                         popUpTo(Routes.MAIN) { inclusive = true }
                     }

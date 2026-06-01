@@ -17,12 +17,12 @@ import com.example.ui.theme.NeonRed
 import com.example.ui.viewmodels.AppViewModel
 
 @Composable
-fun WelcomeScreen(onSkip: () -> Unit, viewModel: AppViewModel) {
+fun WelcomeScreen(onAuthRequest: () -> Unit, onAutoLoggedIn: () -> Unit, viewModel: AppViewModel) {
     val user by viewModel.currentUser.collectAsState()
     
     LaunchedEffect(user) {
         if (user != null) {
-            onSkip()
+            onAutoLoggedIn()
         }
     }
     
@@ -45,7 +45,7 @@ fun WelcomeScreen(onSkip: () -> Unit, viewModel: AppViewModel) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Ciné BOX",
+                text = "Ciné Prime",
                 fontSize = 48.sp,
                 fontWeight = FontWeight.Bold,
                 color = NeonRed,
@@ -72,7 +72,7 @@ fun WelcomeScreen(onSkip: () -> Unit, viewModel: AppViewModel) {
             )
             Spacer(modifier = Modifier.height(48.dp))
             Button(
-                onClick = onSkip,
+                onClick = onAuthRequest,
                 colors = ButtonDefaults.buttonColors(containerColor = NeonRed),
                 shape = RoundedCornerShape(8.dp)
             ) {

@@ -124,7 +124,7 @@ class AppViewModel(private val repository: CineBoxRepository) : ViewModel() {
 
     fun loadXtreamConfigAndAuth() {
         viewModelScope.launch {
-            val config = repository.getIptvConfig().firstOrNull()
+            val config = repository.getIptvConfigSync()
             if (config != null) {
                 try {
                     val authRes = repository.authenticateXtream(config)

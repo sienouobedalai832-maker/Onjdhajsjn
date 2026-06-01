@@ -22,9 +22,20 @@ class MainActivity : ComponentActivity() {
         val viewModelFactory = AppViewModelFactory(repository)
         val viewModel = ViewModelProvider(this, viewModelFactory)[AppViewModel::class.java]
 
+        val sharedPreferences = getSharedPreferences("CinePrimePrefs", MODE_PRIVATE)
+        val savedEmail = sharedPreferences.getString("USER_EMAIL", null)
+        
+        if (savedEmail != null) {
+            viewModel.checkAutoLogin(savedEmail)
+        }
+
         setContent {
             CineBoxTheme {
-                AppNavigation(viewModel = viewModel)
+                AppNavigation(viewModel = viewModel, onLoginSuccess = { email -> 
+                    sharedPreferences.edit().putString("USER_EMAIL", email).apply()
+                }, onLogout = {
+                    sharedPreferences.edit().remove("USER_EMAIL").apply()
+                })
             }
         }
     }

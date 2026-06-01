@@ -45,11 +45,15 @@ fun DetailsScreen(
     var similar by remember { mutableStateOf<List<MediaItem>>(emptyList()) }
 
     LaunchedEffect(id) {
-        movie = viewModel.getMovieDetail(id)
-        cast = viewModel.getCredits(id)
-        similar = viewModel.getSimilar(id)
-        movie?.let {
-            viewModel.saveHistory(id, it.title, "https://image.tmdb.org/t/p/w500${it.posterPath}")
+        try {
+            movie = viewModel.getMovieDetail(id)
+            cast = viewModel.getCredits(id)
+            similar = viewModel.getSimilar(id)
+            movie?.let {
+                viewModel.saveHistory(id, it.title, "https://image.tmdb.org/t/p/w500${it.posterPath}")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -109,7 +113,7 @@ fun DetailsScreen(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.horizontalScroll(rememberScrollState())) {
                     Button(
                         onClick = {
-                            val url = "https://vidsrc.net/embed/movie?tmdb=${m.id}"
+                            val url = "https://frembed.bond/api/film.php?id=${m.id}"
                             onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = NeonRed),
@@ -117,12 +121,12 @@ fun DetailsScreen(
                     ) {
                         Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Vidsrc (EN/FR)", fontWeight = FontWeight.Bold)
+                        Text("Source 1 (Gratuit)", fontWeight = FontWeight.Bold)
                     }
                     
                     Button(
                         onClick = {
-                            val url = "https://frembed.fun/api/film.php?id=${m.id}"
+                            val url = "https://frembed.xyz/api/film.php?id=${m.id}"
                             onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = NeonRed),
@@ -130,7 +134,20 @@ fun DetailsScreen(
                     ) {
                         Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Frembed (FR)", fontWeight = FontWeight.Bold)
+                        Text("Source 2 (Gratuit)", fontWeight = FontWeight.Bold)
+                    }
+
+                    Button(
+                        onClick = {
+                            val url = "https://frembed.live/api/film.php?id=${m.id}"
+                            onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = NeonRed),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Source 3 (Gratuit)", fontWeight = FontWeight.Bold)
                     }
 
                     Button(

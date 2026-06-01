@@ -28,6 +28,7 @@ class CineBoxRepository(private val dao: CineBoxDao) {
     
     suspend fun insertIptvConfig(config: IPTVConfig) = dao.insertIptvConfig(config)
     fun getIptvConfig() = dao.getIptvConfig()
+    suspend fun getIptvConfigSync() = dao.getIptvConfigSync()
 
     suspend fun initializeIptvConfig() {
         val config = dao.getIptvConfigSync()

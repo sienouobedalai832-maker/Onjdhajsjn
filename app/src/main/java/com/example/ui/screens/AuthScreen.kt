@@ -18,7 +18,7 @@ import com.example.ui.viewmodels.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthScreen(viewModel: AppViewModel, onLoggedIn: () -> Unit) {
+fun AuthScreen(viewModel: AppViewModel, onLoggedIn: (String) -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -28,7 +28,7 @@ fun AuthScreen(viewModel: AppViewModel, onLoggedIn: () -> Unit) {
 
     LaunchedEffect(user) {
         if (user != null) {
-            onLoggedIn()
+            onLoggedIn(user!!.email)
         }
     }
 
