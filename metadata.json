@@ -1,5 +1,5 @@
 {
-  "name": "Ciné BOX",
+  "name": "Ciné Prime",
   "description": "Plateforme de streaming de films et séries avec chaînes TV en direct.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

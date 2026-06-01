@@ -14,9 +14,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.NeonRed
+import com.example.ui.viewmodels.AppViewModel
 
 @Composable
-fun WelcomeScreen(onSkip: () -> Unit) {
+fun WelcomeScreen(onSkip: () -> Unit, viewModel: AppViewModel) {
+    val user by viewModel.currentUser.collectAsState()
+    
+    LaunchedEffect(user) {
+        if (user != null) {
+            onSkip()
+        }
+    }
+    
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.5f,

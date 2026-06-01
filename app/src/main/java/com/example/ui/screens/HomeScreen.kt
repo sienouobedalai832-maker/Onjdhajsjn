@@ -119,6 +119,10 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         val genreMovies by viewModel.genreMovies.collectAsState()
+        
+        // Let's add extra categories like Horror and Adventure
+        val horrorMovies by viewModel.horrorMovies.collectAsState()
+        val adventureMovies by viewModel.adventureMovies.collectAsState()
 
         // Film Grids
         if (searchQuery.isNotEmpty()) {
@@ -140,6 +144,14 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(24.dp))
             if (popular.isNotEmpty()) {
                 MediaSection("Films Populaires", popular, onMovieClick)
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            if (horrorMovies.isNotEmpty()) {
+                MediaSection("Horreur", horrorMovies, onMovieClick)
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            if (adventureMovies.isNotEmpty()) {
+                MediaSection("Aventure", adventureMovies, onMovieClick)
             }
         }
 

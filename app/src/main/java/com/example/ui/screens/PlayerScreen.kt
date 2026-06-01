@@ -26,16 +26,6 @@ fun PlayerScreen(
     val url = java.net.URLDecoder.decode(encodedUrl, "UTF-8")
     val context = LocalContext.current
 
-    DisposableEffect(Unit) {
-        val activity = context as? ComponentActivity
-        val originalOrientation = activity?.requestedOrientation ?: ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
-        
-        onDispose {
-            activity?.requestedOrientation = originalOrientation
-        }
-    }
-
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         if (url.contains(".m3u8") || url.contains(".ts")) {
             CineBoxExoPlayer(url = url)

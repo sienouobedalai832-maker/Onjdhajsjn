@@ -63,6 +63,12 @@ class AppViewModel(private val repository: CineBoxRepository) : ViewModel() {
     private val _genreMovies = MutableStateFlow<List<MediaItem>>(emptyList())
     val genreMovies = _genreMovies.asStateFlow()
     
+    private val _horrorMovies = MutableStateFlow<List<MediaItem>>(emptyList())
+    val horrorMovies = _horrorMovies.asStateFlow()
+
+    private val _adventureMovies = MutableStateFlow<List<MediaItem>>(emptyList())
+    val adventureMovies = _adventureMovies.asStateFlow()
+    
     private val _searchResults = MutableStateFlow<List<MediaItem>>(emptyList())
     val searchResults = _searchResults.asStateFlow()
 
@@ -95,8 +101,11 @@ class AppViewModel(private val repository: CineBoxRepository) : ViewModel() {
         viewModelScope.launch {
             repository.initializeIptvConfig()
             try {
-                _trending.value = repository.getTrendingMovies()
+                val trendingRes = repository.getTrendingMovies()
+                _trending.value = trendingRes
                 _popularMovies.value = repository.getPopularMovies()
+                _horrorMovies.value = repository.getMoviesByGenre(27)
+                _adventureMovies.value = repository.getMoviesByGenre(12)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

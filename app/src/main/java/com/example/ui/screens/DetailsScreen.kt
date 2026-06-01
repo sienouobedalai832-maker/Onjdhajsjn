@@ -122,7 +122,7 @@ fun DetailsScreen(
                     
                     Button(
                         onClick = {
-                            val url = "https://frembed.pro/api/film.php?id=${m.id}"
+                            val url = "https://frembed.fun/api/film.php?id=${m.id}"
                             onPlay(java.net.URLEncoder.encode(url, "UTF-8"), m.title)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = NeonRed),

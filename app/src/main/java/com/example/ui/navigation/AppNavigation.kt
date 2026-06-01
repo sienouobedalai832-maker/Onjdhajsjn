@@ -17,7 +17,7 @@ import com.example.ui.viewmodels.AppViewModel
 fun AppNavigation(viewModel: AppViewModel, navController: NavHostController = rememberNavController()) {
     NavHost(navController = navController, startDestination = Routes.WELCOME) {
         composable(Routes.WELCOME) {
-            WelcomeScreen(onSkip = {
+            WelcomeScreen(viewModel = viewModel, onSkip = {
                 navController.navigate(Routes.AUTH) {
                     popUpTo(Routes.WELCOME) { inclusive = true }
                 }
@@ -41,6 +41,9 @@ fun AppNavigation(viewModel: AppViewModel, navController: NavHostController = re
                 onBack = { navController.popBackStack() },
                 onPlay = { encodedUrl, _ ->
                     navController.navigate("player/$encodedUrl")
+                },
+                onMovieClick = { newId -> 
+                    navController.navigate("movie_detail/$newId")
                 }
             )
         }

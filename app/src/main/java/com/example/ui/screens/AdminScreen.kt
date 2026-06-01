@@ -56,7 +56,8 @@ fun AdminScreen(viewModel: AppViewModel) {
         Button(
             onClick = {
                 scope.launch {
-                    viewModel.insertIptvConfig(IPTVConfig(1, url.trim(), username.trim(), password.trim(), backupUrl = ""))
+                    val cleanUrl = url.trim().removeSuffix("/")
+                    viewModel.insertIptvConfig(IPTVConfig(1, cleanUrl, username.trim(), password.trim(), backupUrl = ""))
                     viewModel.loadXtreamConfigAndAuth()
                     Toast.makeText(context, "Configuration sauvegardée !", Toast.LENGTH_SHORT).show()
                 }
